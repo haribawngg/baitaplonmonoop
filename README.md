@@ -1,2 +1,3 @@
-# b-i-t-p-l-n-m-n-oop
+# bai tap lon mon oop
+
 bài tập lớn môn lập trình hướng đối tượng quản lí học sinh
