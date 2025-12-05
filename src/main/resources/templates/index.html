@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống quản lý điểm - Trường THCS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 0;
+        }
+        .feature-card {
+            transition: transform 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        .feature-icon {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+        }
+        .footer {
+            background-color: #343a40;
+            color: white;
+            padding: 40px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-graduation-cap me-2"></i>
+                Quản lý điểm THCS
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/students">Học sinh</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/classes">Lớp học</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/subjects">Môn học</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/teachers">Giáo viên</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/grades">Điểm số</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold mb-4">Hệ thống quản lý điểm</h1>
+            <p class="lead mb-4">Quản lý điểm số học sinh trường Trung học cơ sở một cách hiệu quả và chính xác</p>
+            <a href="/students" class="btn btn-primary btn-lg me-3">
+                <i class="fas fa-users me-2"></i>Quản lý học sinh
+            </a>
+            <a href="/grades" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-chart-line me-2"></i>Xem điểm số
+            </a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row text-center mb-5">
+                <div class="col-12">
+                    <h2 class="fw-bold">Tính năng chính</h2>
+                    <p class="text-muted">Hệ thống được thiết kế để đáp ứng mọi nhu cầu quản lý điểm số</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card feature-card h-100 text-center p-4">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <h4>Quản lý học sinh</h4>
+                        <p class="text-muted">Thêm, sửa, xóa thông tin học sinh. Quản lý danh sách lớp học và phân lớp.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card h-100 text-center p-4">
+                        <div class="feature-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h4>Quản lý môn học</h4>
+                        <p class="text-muted">Thiết lập các môn học theo khối lớp. Phân công giáo viên giảng dạy.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card h-100 text-center p-4">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h4>Nhập và tính điểm</h4>
+                        <p class="text-muted">Nhập điểm số các loại. Tự động tính điểm trung bình và xếp loại học lực.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card h-100 text-center p-4">
+                        <div class="feature-icon">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <h4>Quản lý giáo viên</h4>
+                        <p class="text-muted">Quản lý thông tin giáo viên. Phân công chủ nhiệm và giảng dạy.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card h-100 text-center p-4">
+                        <div class="feature-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <h4>Báo cáo thống kê</h4>
+                        <p class="text-muted">Tạo các báo cáo điểm số theo lớp, môn học, học kỳ và năm học.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card h-100 text-center p-4">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>Bảo mật dữ liệu</h4>
+                        <p class="text-muted">Hệ thống bảo mật cao, đảm bảo thông tin học sinh được bảo vệ an toàn.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <div class="card border-0 bg-transparent">
+                        <div class="card-body">
+                            <h3 class="text-primary fw-bold" id="totalStudents">0</h3>
+                            <p class="text-muted">Tổng số học sinh</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 bg-transparent">
+                        <div class="card-body">
+                            <h3 class="text-success fw-bold" id="totalClasses">0</h3>
+                            <p class="text-muted">Tổng số lớp học</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 bg-transparent">
+                        <div class="card-body">
+                            <h3 class="text-info fw-bold" id="totalSubjects">0</h3>
+                            <p class="text-muted">Tổng số môn học</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 bg-transparent">
+                        <div class="card-body">
+                            <h3 class="text-warning fw-bold" id="totalTeachers">0</h3>
+                            <p class="text-muted">Tổng số giáo viên</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="fas fa-graduation-cap me-2"></i>Hệ thống quản lý điểm THCS</h5>
+                    <p class="text-muted">Phần mềm quản lý điểm số học sinh trường Trung học cơ sở</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <p class="text-muted">&copy; 2024 Hệ thống quản lý điểm THCS. Tất cả quyền được bảo lưu.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Load statistics
+        async function loadStatistics() {
+            try {
+                const [studentsRes, classesRes, subjectsRes, teachersRes] = await Promise.all([
+                    fetch('/api/students'),
+                    fetch('/api/classes'),
+                    fetch('/api/subjects'),
+                    fetch('/api/teachers')
+                ]);
+
+                const students = await studentsRes.json();
+                const classes = await classesRes.json();
+                const subjects = await subjectsRes.json();
+                const teachers = await teachersRes.json();
+
+                document.getElementById('totalStudents').textContent = students.length;
+                document.getElementById('totalClasses').textContent = classes.length;
+                document.getElementById('totalSubjects').textContent = subjects.length;
+                document.getElementById('totalTeachers').textContent = teachers.length;
+            } catch (error) {
+                console.error('Error loading statistics:', error);
+            }
+        }
+
+        // Load statistics on page load
+        document.addEventListener('DOMContentLoaded', loadStatistics);
+    </script>
+</body>
+</html>

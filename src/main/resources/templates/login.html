@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - Hệ thống quản lý điểm THCS</title>
+    <script src="/_sdk/element_sdk.js"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        .main-wrapper {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem;
+            color: white;
+            position: relative;
+        }
+
+        .left-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+
+        .left-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 500px;
+        }
+
+        .left-content .icon {
+            font-size: 5rem;
+            margin-bottom: 2rem;
+            display: block;
+        }
+
+        .left-content h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0 0 1rem 0;
+            line-height: 1.2;
+        }
+
+        .left-content p {
+            font-size: 1.2rem;
+            margin: 0;
+            opacity: 0.95;
+        }
+
+        .right-panel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+        }
+
+        .login-form-container {
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .form-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .form-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .form-header p {
+            font-size: 1rem;
+            margin: 0;
+            opacity: 0.7;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-label i {
+            margin-right: 0.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid #4a4a4a;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-control:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(100, 100, 100, 0.2);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .btn-login i {
+            margin-right: 0.5rem;
+        }
+
+        .divider {
+            margin: 2rem 0;
+            border: none;
+            border-top: 1px solid #4a4a4a;
+        }
+
+        .demo-section {
+            margin-top: 2rem;
+        }
+
+        .demo-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .demo-accounts {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .demo-account {
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            text-align: left;
+            border: 1px solid #4a4a4a;
+        }
+
+        .demo-account strong {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .demo-account div {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        /* Font Awesome icons using Unicode */
+        .fa-graduation-cap::before { content: "🎓"; }
+        .fa-user::before { content: "👤"; }
+        .fa-lock::before { content: "🔒"; }
+        .fa-sign-in-alt::before { content: "➜"; }
+
+        @media (max-width: 968px) {
+            .main-wrapper {
+                grid-template-columns: 1fr;
+                overflow-y: auto;
+            }
+
+            .left-panel {
+                min-height: 40%;
+                padding: 2rem;
+            }
+
+            .left-content h1 {
+                font-size: 2rem;
+            }
+
+            .left-content .icon {
+                font-size: 3.5rem;
+            }
+
+            .right-panel {
+                padding: 2rem;
+            }
+
+            .demo-accounts {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <style>@view-transition { navigation: auto; }</style>
+    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+    <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+</head>
+<body>
+<div class="main-wrapper">
+    <div class="left-panel" id="leftPanel">
+        <div class="left-content"><span class="icon">🎓</span>
+            <h1 id="pageTitle">Đăng nhập hệ thống</h1>
+            <p id="subtitle">Quản lý điểm số THCS</p>
+        </div>
+    </div>
+    <div class="right-panel" id="rightPanel">
+        <div class="login-form-container">
+            <div class="form-header">
+                <h2 id="formWelcome">Chào mừng trở lại</h2>
+                <p id="formSubtext">Vui lòng đăng nhập để tiếp tục</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group"><label for="username" class="form-label" id="usernameLabel"> <i class="fa-user"></i><span id="usernameLabelText">Tên đăng nhập</span> </label> <input type="text" class="form-control" id="username" name="username" required>
+                </div>
+                <div class="form-group"><label for="password" class="form-label" id="passwordLabel"> <i class="fa-lock"></i><span id="passwordLabelText">Mật khẩu</span> </label> <input type="password" class="form-control" id="password" name="password" required>
+                </div><button type="submit" class="btn-login" id="loginButton"> <i class="fa-sign-in-alt"></i><span id="buttonText">Đăng nhập</span> </button>
+            </form>
+            <hr class="divider" id="divider">
+            <div class="demo-section">
+                <h6 class="demo-title" id="demoTitle">Tài khoản demo:</h6>
+                <div class="demo-accounts">
+                    <div class="demo-account" id="adminAccount"><strong id="adminLabel">Admin:</strong>
+                        <div>
+                            Username: admin<br>
+                            Password: admin123
+                        </div>
+                    </div>
+                    <div class="demo-account" id="teacherAccount"><strong id="teacherLabel">Giáo viên:</strong>
+                        <div>
+                            Username: teacher<br>
+                            Password: teacher123
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const defaultConfig = {
+        left_background: "#1a1a2e",
+        right_background: "#16213e",
+        button_color: "#0f3460",
+        text_color: "#e8e8e8",
+        accent_color: "#53a8b6",
+        font_family: "Segoe UI",
+        font_size: 16,
+        page_title: "Đăng nhập hệ thống",
+        subtitle: "Quản lý điểm số THCS",
+        username_label: "Tên đăng nhập",
+        password_label: "Mật khẩu",
+        button_text: "Đăng nhập",
+        demo_title: "Tài khoản demo:",
+        admin_label: "Admin:",
+        teacher_label: "Giáo viên:"
+    };
+
+    async function onConfigChange(config) {
+        const baseSize = config.font_size || defaultConfig.font_size;
+        const customFont = config.font_family || defaultConfig.font_family;
+        const baseFontStack = 'Arial, sans-serif';
+        const fontFamily = `${customFont}, ${baseFontStack}`;
+
+        // Apply colors
+        const leftBg = config.left_background || defaultConfig.left_background;
+        const rightBg = config.right_background || defaultConfig.right_background;
+        const buttonColor = config.button_color || defaultConfig.button_color;
+        const textColor = config.text_color || defaultConfig.text_color;
+        const accentColor = config.accent_color || defaultConfig.accent_color;
+
+        document.getElementById('leftPanel').style.background = leftBg;
+        document.getElementById('rightPanel').style.background = rightBg;
+        document.getElementById('rightPanel').style.color = textColor;
+        document.getElementById('loginButton').style.background = buttonColor;
+
+        // Apply accent color to form controls on focus
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = `
+            .form-control:focus {
+                border-color: ${accentColor} !important;
+                box-shadow: 0 0 0 3px ${accentColor}33 !important;
+            }
+        `;
+        const oldStyle = document.getElementById('dynamic-styles');
+        if (oldStyle) oldStyle.remove();
+        styleSheet.id = 'dynamic-styles';
+        document.head.appendChild(styleSheet);
+
+        document.querySelectorAll('.form-control').forEach(el => {
+            el.style.background = rightBg;
+            el.style.color = textColor;
+        });
+
+        document.getElementById('divider').style.borderColor = '#4a4a4a';
+        document.querySelectorAll('.demo-account').forEach(el => {
+            el.style.background = leftBg;
+            el.style.color = textColor;
+        });
+
+        // Apply fonts
+        document.getElementById('pageTitle').style.fontFamily = fontFamily;
+        document.getElementById('subtitle').style.fontFamily = fontFamily;
+        document.getElementById('formWelcome').style.fontFamily = fontFamily;
+        document.getElementById('formSubtext').style.fontFamily = fontFamily;
+        document.getElementById('usernameLabelText').style.fontFamily = fontFamily;
+        document.getElementById('passwordLabelText').style.fontFamily = fontFamily;
+        document.getElementById('buttonText').style.fontFamily = fontFamily;
+        document.getElementById('demoTitle').style.fontFamily = fontFamily;
+
+        // Apply font sizes
+        document.getElementById('pageTitle').style.fontSize = `${baseSize * 2.5}px`;
+        document.getElementById('subtitle').style.fontSize = `${baseSize * 1.2}px`;
+        document.getElementById('formWelcome').style.fontSize = `${baseSize * 2}px`;
+        document.getElementById('formSubtext').style.fontSize = `${baseSize}px`;
+        document.querySelectorAll('.form-label').forEach(el => el.style.fontSize = `${baseSize * 0.95}px`);
+        document.querySelectorAll('.form-control').forEach(el => el.style.fontSize = `${baseSize}px`);
+        document.getElementById('loginButton').style.fontSize = `${baseSize * 1.05}px`;
+        document.getElementById('demoTitle').style.fontSize = `${baseSize}px`;
+        document.querySelectorAll('.demo-account').forEach(el => el.style.fontSize = `${baseSize * 0.85}px`);
+
+        // Apply text content
+        document.getElementById('pageTitle').textContent = config.page_title || defaultConfig.page_title;
+        document.getElementById('subtitle').textContent = config.subtitle || defaultConfig.subtitle;
+        document.getElementById('usernameLabelText').textContent = config.username_label || defaultConfig.username_label;
+        document.getElementById('passwordLabelText').textContent = config.password_label || defaultConfig.password_label;
+        document.getElementById('buttonText').textContent = config.button_text || defaultConfig.button_text;
+        document.getElementById('demoTitle').textContent = config.demo_title || defaultConfig.demo_title;
+        document.getElementById('adminLabel').textContent = config.admin_label || defaultConfig.admin_label;
+        document.getElementById('teacherLabel').textContent = config.teacher_label || defaultConfig.teacher_label;
+    }
+
+    function mapToCapabilities(config) {
+        return {
+            recolorables: [
+                {
+                    get: () => config.left_background || defaultConfig.left_background,
+                    set: (value) => {
+                        if (window.elementSdk) {
+                            window.elementSdk.config.left_background = value;
+                            window.elementSdk.setConfig({ left_background: value });
+                        }
+                    }
+                },
+                {
+                    get: () => config.right_background || defaultConfig.right_background,
+                    set: (value) => {
+                        if (window.elementSdk) {
+                            window.elementSdk.config.right_background = value;
+                            window.elementSdk.setConfig({ right_background: value });
+                        }
+                    }
+                },
+                {
+                    get: () => config.text_color || defaultConfig.text_color,
+                    set: (value) => {
+                        if (window.elementSdk) {
+                            window.elementSdk.config.text_color = value;
+                            window.elementSdk.setConfig({ text_color: value });
+                        }
+                    }
+                },
+                {
+                    get: () => config.button_color || defaultConfig.button_color,
+                    set: (value) => {
+                        if (window.elementSdk) {
+                            window.elementSdk.config.button_color = value;
+                            window.elementSdk.setConfig({ button_color: value });
+                        }
+                    }
+                },
+                {
+                    get: () => config.accent_color || defaultConfig.accent_color,
+                    set: (value) => {
+                        if (window.elementSdk) {
+                            window.elementSdk.config.accent_color = value;
+                            window.elementSdk.setConfig({ accent_color: value });
+                        }
+                    }
+                }
+            ],
+            borderables: [],
+            fontEditable: {
+                get: () => config.font_family || defaultConfig.font_family,
+                set: (value) => {
+                    if (window.elementSdk) {
+                        window.elementSdk.config.font_family = value;
+                        window.elementSdk.setConfig({ font_family: value });
+                    }
+                }
+            },
+            fontSizeable: {
+                get: () => config.font_size || defaultConfig.font_size,
+                set: (value) => {
+                    if (window.elementSdk) {
+                        window.elementSdk.config.font_size = value;
+                        window.elementSdk.setConfig({ font_size: value });
+                    }
+                }
+            }
+        };
+    }
+
+    function mapToEditPanelValues(config) {
+        return new Map([
+            ["page_title", config.page_title || defaultConfig.page_title],
+            ["subtitle", config.subtitle || defaultConfig.subtitle],
+            ["username_label", config.username_label || defaultConfig.username_label],
+            ["password_label", config.password_label || defaultConfig.password_label],
+            ["button_text", config.button_text || defaultConfig.button_text],
+            ["demo_title", config.demo_title || defaultConfig.demo_title],
+            ["admin_label", config.admin_label || defaultConfig.admin_label],
+            ["teacher_label", config.teacher_label || defaultConfig.teacher_label]
+        ]);
+    }
+
+    // Initialize the SDK
+    if (window.elementSdk) {
+        window.elementSdk.init({
+            defaultConfig,
+            onConfigChange,
+            mapToCapabilities,
+            mapToEditPanelValues
+        });
+    }
+
+    // Handle form submission
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        // Create backdrop
+        const backdrop = document.createElement('div');
+        backdrop.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+        `;
+        document.body.appendChild(backdrop);
+
+        // Create success message overlay
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #16213e;
+            color: #e8e8e8;
+            padding: 2.5rem 3.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            text-align: center;
+        `;
+
+        overlay.innerHTML = `
+            <div style="color: #53a8b6; font-size: 3.5rem; margin-bottom: 1rem;">✓</div>
+            <h3 style="color: #e8e8e8; margin-bottom: 0.5rem; font-size: 1.5rem;">Đăng nhập thành công!</h3>
+            <p style="color: #b8b8b8; margin: 0;">Chào mừng, <strong style="color: #53a8b6;">${username}</strong></p>
+        `;
+
+        document.body.appendChild(overlay);
+
+        setTimeout(() => {
+            overlay.remove();
+            backdrop.remove();
+        }, 3000);
+    });
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a8aec0840fab6bd',t:'MTc2NDg0NzMwNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý học sinh - Hệ thống quản lý điểm THCS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+        }
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .search-box {
+            max-width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-graduation-cap me-2"></i>
+                Quản lý điểm THCS
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/students">Học sinh</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/classes">Lớp học</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/subjects">Môn học</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/teachers">Giáo viên</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/grades">Điểm số</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h2><i class="fas fa-users me-2"></i>Quản lý học sinh</h2>
+                <p class="text-muted">Quản lý thông tin học sinh và phân lớp</p>
+            </div>
+            <div class="col-md-6 text-end">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#studentModal" onclick="openAddModal()">
+                    <i class="fas fa-plus me-2"></i>Thêm học sinh mới
+                </button>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="input-group search-box">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Tìm kiếm theo tên học sinh...">
+                    <button class="btn btn-outline-secondary" type="button" onclick="searchStudents()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <select class="form-select" id="classFilter" onchange="filterByClass()">
+                    <option value="">Tất cả lớp học</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Students Table -->
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Mã HS</th>
+                                <th>Họ và tên</th>
+                                <th>Ngày sinh</th>
+                                <th>Giới tính</th>
+                                <th>Lớp</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTableBody">
+                            <!-- Data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Modal -->
+    <div class="modal fade" id="studentModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Thêm học sinh mới</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="studentForm">
+                        <input type="hidden" id="studentId">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="studentCode" class="form-label">Mã học sinh *</label>
+                                <input type="text" class="form-control" id="studentCode" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="fullName" class="form-label">Họ và tên *</label>
+                                <input type="text" class="form-control" id="fullName" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="dateOfBirth" class="form-label">Ngày sinh</label>
+                                <input type="date" class="form-control" id="dateOfBirth">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="gender" class="form-label">Giới tính</label>
+                                <select class="form-select" id="gender">
+                                    <option value="">Chọn giới tính</option>
+                                    <option value="Nam">Nam</option>
+                                    <option value="Nữ">Nữ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Địa chỉ</label>
+                            <textarea class="form-control" id="address" rows="2"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="phoneNumber" class="form-label">Số điện thoại</label>
+                                <input type="tel" class="form-control" id="phoneNumber">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="parentName" class="form-label">Tên phụ huynh</label>
+                                <input type="text" class="form-control" id="parentName">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="parentPhone" class="form-label">SĐT phụ huynh</label>
+                                <input type="tel" class="form-control" id="parentPhone">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="classId" class="form-label">Lớp học *</label>
+                                <select class="form-select" id="classId" required>
+                                    <option value="">Chọn lớp học</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="enrollmentDate" class="form-label">Ngày nhập học</label>
+                                <input type="date" class="form-control" id="enrollmentDate">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" onclick="saveStudent()">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let students = [];
+        let classes = [];
+        let currentStudentId = null;
+
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStudents();
+            loadClasses();
+        });
+
+        // Load students
+        async function loadStudents() {
+            try {
+                const response = await fetch('/api/students');
+                students = await response.json();
+                displayStudents(students);
+            } catch (error) {
+                console.error('Error loading students:', error);
+                showAlert('Lỗi khi tải danh sách học sinh', 'danger');
+            }
+        }
+
+        // Load classes
+        async function loadClasses() {
+            try {
+                const response = await fetch('/api/classes');
+                classes = await response.json();
+                populateClassSelects();
+            } catch (error) {
+                console.error('Error loading classes:', error);
+            }
+        }
+
+        // Populate class selects
+        function populateClassSelects() {
+            const classSelects = document.querySelectorAll('#classId, #classFilter');
+            classSelects.forEach(select => {
+                select.innerHTML = select.id === 'classFilter' ? '<option value="">Tất cả lớp học</option>' : '<option value="">Chọn lớp học</option>';
+                classes.forEach(cls => {
+                    const option = document.createElement('option');
+                    option.value = cls.id;
+                    option.textContent = cls.className;
+                    select.appendChild(option);
+                });
+            });
+        }
+
+        // Display students
+        function displayStudents(studentList) {
+            const tbody = document.getElementById('studentsTableBody');
+            tbody.innerHTML = '';
+
+            studentList.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.studentCode}</td>
+                    <td>${student.fullName}</td>
+                    <td>${student.dateOfBirth || '-'}</td>
+                    <td>${student.gender || '-'}</td>
+                    <td>${student.classEntity ? student.classEntity.className : '-'}</td>
+                    <td>
+                        <span class="badge ${student.isActive ? 'bg-success' : 'bg-secondary'}">
+                            ${student.isActive ? 'Hoạt động' : 'Ngừng hoạt động'}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editStudent(${student.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteStudent(${student.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Search students
+        function searchStudents() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filteredStudents = students.filter(student => 
+                student.fullName.toLowerCase().includes(searchTerm)
+            );
+            displayStudents(filteredStudents);
+        }
+
+        // Filter by class
+        function filterByClass() {
+            const classId = document.getElementById('classFilter').value;
+            if (classId === '') {
+                displayStudents(students);
+            } else {
+                const filteredStudents = students.filter(student => 
+                    student.classEntity && student.classEntity.id == classId
+                );
+                displayStudents(filteredStudents);
+            }
+        }
+
+        // Open add modal
+        function openAddModal() {
+            currentStudentId = null;
+            document.getElementById('modalTitle').textContent = 'Thêm học sinh mới';
+            document.getElementById('studentForm').reset();
+            document.getElementById('studentId').value = '';
+        }
+
+        // Edit student
+        function editStudent(id) {
+            const student = students.find(s => s.id === id);
+            if (student) {
+                currentStudentId = id;
+                document.getElementById('modalTitle').textContent = 'Chỉnh sửa học sinh';
+                document.getElementById('studentId').value = student.id;
+                document.getElementById('studentCode').value = student.studentCode;
+                document.getElementById('fullName').value = student.fullName;
+                document.getElementById('dateOfBirth').value = student.dateOfBirth || '';
+                document.getElementById('gender').value = student.gender || '';
+                document.getElementById('address').value = student.address || '';
+                document.getElementById('phoneNumber').value = student.phoneNumber || '';
+                document.getElementById('email').value = student.email || '';
+                document.getElementById('parentName').value = student.parentName || '';
+                document.getElementById('parentPhone').value = student.parentPhone || '';
+                document.getElementById('classId').value = student.classEntity ? student.classEntity.id : '';
+                document.getElementById('enrollmentDate').value = student.enrollmentDate || '';
+
+                const modal = new bootstrap.Modal(document.getElementById('studentModal'));
+                modal.show();
+            }
+        }
+
+        // Save student
+        async function saveStudent() {
+            const form = document.getElementById('studentForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const studentData = {
+                studentCode: document.getElementById('studentCode').value,
+                fullName: document.getElementById('fullName').value,
+                dateOfBirth: document.getElementById('dateOfBirth').value || null,
+                gender: document.getElementById('gender').value || null,
+                address: document.getElementById('address').value || null,
+                phoneNumber: document.getElementById('phoneNumber').value || null,
+                email: document.getElementById('email').value || null,
+                parentName: document.getElementById('parentName').value || null,
+                parentPhone: document.getElementById('parentPhone').value || null,
+                enrollmentDate: document.getElementById('enrollmentDate').value || null,
+                isActive: true,
+                classEntity: {
+                    id: parseInt(document.getElementById('classId').value)
+                }
+            };
+
+            try {
+                const url = currentStudentId ? `/api/students/${currentStudentId}` : '/api/students';
+                const method = currentStudentId ? 'PUT' : 'POST';
+
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(studentData)
+                });
+
+                if (response.ok) {
+                    showAlert(currentStudentId ? 'Cập nhật học sinh thành công!' : 'Thêm học sinh thành công!', 'success');
+                    loadStudents();
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('studentModal'));
+                    modal.hide();
+                } else {
+                    showAlert('Có lỗi xảy ra khi lưu học sinh', 'danger');
+                }
+            } catch (error) {
+                console.error('Error saving student:', error);
+                showAlert('Có lỗi xảy ra khi lưu học sinh', 'danger');
+            }
+        }
+
+        // Delete student
+        async function deleteStudent(id) {
+            if (confirm('Bạn có chắc chắn muốn xóa học sinh này?')) {
+                try {
+                    const response = await fetch(`/api/students/${id}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        showAlert('Xóa học sinh thành công!', 'success');
+                        loadStudents();
+                    } else {
+                        showAlert('Có lỗi xảy ra khi xóa học sinh', 'danger');
+                    }
+                } catch (error) {
+                    console.error('Error deleting student:', error);
+                    showAlert('Có lỗi xảy ra khi xóa học sinh', 'danger');
+                }
+            }
+        }
+
+        // Show alert
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            alertDiv.style.top = '20px';
+            alertDiv.style.right = '20px';
+            alertDiv.style.zIndex = '9999';
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(alertDiv);
+
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
